@@ -31,9 +31,8 @@ from fairseq.meters import AverageMeter, StopwatchMeter, TimeMeter
 from fairseq.optim import lr_scheduler
 from fairseq.sequence_generator import SequenceGenerator
 from torch.nn.utils.rnn import pad_sequence
-from fairseq.models.transformer import TransformerDecoder
+from fairseq.models.bert_seq2seq import SelfTransformerDecoder as TransformerDecoder
 from fairseq.data.data_utils import collate_tokens
-from fairseq.models.transformer import Embedding
 
 def parse():
     parser = options.get_training_parser()
@@ -142,7 +141,7 @@ def train_probing_model(epoch_itr, args, task, prob_model, prob_optim, criterion
 
     while True:  # each epoch
         train_itr = epoch_itr.next_epoch_itr(shuffle=True)
-        progress = progress_bar.build_progress_bar(args, train_itr, epoch_itr.epoch, default='json')
+        progress = progress_bar.build_progress_bar(args, train_itr, epoch_itr.epoch, default='tqdm')
 
         for i,sample in enumerate(progress):
             # build probing targets for loss calculation
